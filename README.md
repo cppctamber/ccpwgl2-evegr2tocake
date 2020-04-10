@@ -26,7 +26,7 @@ I couldn't correctly calculate valid vertex tangents for eve online's shaders us
 
 # build
 1. install MinGW
-2. place `granny2.dll` into the MinGW `/lib` directory
+2. copy `granny2.dll` into the MinGW `/lib` directory
 3. if on windows add MinGW `/bin` directory to paths
 4. `g++ main.cpp -o evegr2tocake.exe -l granny2` 
 
