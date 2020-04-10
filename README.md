@@ -1,4 +1,4 @@
-# ccpwgl2-cake
+# evegr2tocake
 Converts eve online `.gr2` files to a ccpwgl2 `.cake` format. 
 
 # cake format
