@@ -14,6 +14,8 @@ Each line represents a new element declaration.
 * **Vertex BiTangent**: BITANGENT[Float, Float, Float, Float]
 * **Area Name**: AREA:String (Directly proceeds its faces)
 * **Area Face**: FACE:[Integer, Integer, Integer]
+* **Mesh**: MESH (Directly proceeds a mesh)
+* **Mesh Name** : NAME:String
 
 ### unsupported/ todo
 - Animations
