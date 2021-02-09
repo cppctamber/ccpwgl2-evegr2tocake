@@ -139,20 +139,18 @@ void getMeshInfo(const Mesh_t* mesh) {
 
 }
 
-void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
+void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	fprintf(stderr, "# VertexCount: %d, BytesPerVertex: %d\n", nVertices_, bytesPerVertex_);
 	fprintf(stderr, "# IndexCount: %d, BytesPerIndex: %d\n", nIndices_, bytesPerIndex_);
 
-	FILE* file = fopen(dst, "w");
+	fprintf(file, "NAME:%s\n", mesh->Name);
 //	fprintf(file, "mtllib master.mtl\n");
-
-//	fprintf("NAME:%f\n", mesh.name);
 
 	if(vertexComponents_[0].exists) { 
 		printf("0. Position found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[0].offset;
-			fprintf(file, "POSITION:[%f,%f,%f]\n",
+			fprintf(file, "POSITION:%f,%f,%f\n",
 			vertexComponents_[0].convert(vertex + 0 * vertexComponents_[0].typeSize),
 			vertexComponents_[0].convert(vertex + 1 * vertexComponents_[0].typeSize),
 			vertexComponents_[0].convert(vertex + 2 * vertexComponents_[0].typeSize)
@@ -164,7 +162,7 @@ void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
 	    printf("1. Normals found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[1].offset;
-			fprintf(file, "NORMAL:[%f,%f,%f]\n",
+			fprintf(file, "NORMAL:%f,%f,%f\n",
 			vertexComponents_[1].convert(vertex + 0 * vertexComponents_[1].typeSize) / 255,
 			vertexComponents_[1].convert(vertex + 1 * vertexComponents_[1].typeSize) / 255,
 			vertexComponents_[1].convert(vertex + 2 * vertexComponents_[1].typeSize) / 255
@@ -176,7 +174,7 @@ void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
 	    printf("2. Tangents found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[2].offset;
-			fprintf(file, "TANGENT:[%f,%f,%f,%f]\n",
+			fprintf(file, "TANGENT:%f,%f,%f,%f\n",
 			vertexComponents_[2].convert(vertex + 0 * vertexComponents_[2].typeSize) / 255,
 			vertexComponents_[2].convert(vertex + 1 * vertexComponents_[2].typeSize) / 255,
 			vertexComponents_[2].convert(vertex + 2 * vertexComponents_[2].typeSize) / 255,
@@ -189,7 +187,7 @@ void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
 	    printf("3. Bi-Tangents found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[3].offset;
-			fprintf(file, "BITANGENT:[%f,%f,%f,%f]\n",
+			fprintf(file, "BITANGENT:%f,%f,%f,%f\n",
 			vertexComponents_[3].convert(vertex + 0 * vertexComponents_[3].typeSize) / 255,
 			vertexComponents_[3].convert(vertex + 1 * vertexComponents_[3].typeSize) / 255,
 			vertexComponents_[3].convert(vertex + 2 * vertexComponents_[3].typeSize) / 255,
@@ -202,7 +200,7 @@ void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
 		printf("4. Texture coordinates 0 found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[4].offset;
-			fprintf(file, "TEXCOORD0:[%f,%f]\n",
+			fprintf(file, "TEXCOORD0:%f,%f\n",
 			vertexComponents_[4].convert(vertex + 0 * vertexComponents_[4].typeSize),
 			vertexComponents_[4].convert(vertex + 1 * vertexComponents_[4].typeSize)
 			);
@@ -213,7 +211,7 @@ void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
 	printf("5. Texture coordinates 1 found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[5].offset;
-			fprintf(file, "TEXCOORD1:[%f,%f]\n",
+			fprintf(file, "TEXCOORD1:%f,%f\n",
 			vertexComponents_[5].convert(vertex + 0 * vertexComponents_[5].typeSize),
 			vertexComponents_[5].convert(vertex + 1 * vertexComponents_[5].typeSize)
 			);
@@ -236,7 +234,7 @@ void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
 				index1 = indices[index0 + 0] + 1;
 				index2 = indices[index0 + 1] + 1;
 				index3 = indices[index0 + 2] + 1;
-				fprintf(file, "FACE:[%d,%d,%d]\n",
+				fprintf(file, "FACE:%d,%d,%d\n",
 				index1 - 1, 
 				index2 - 1,
 				index3 - 1); 
@@ -254,7 +252,7 @@ void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
 				index1 = indices[index0 + 0] + 1;
 				index2 = indices[index0 + 1] + 1;
 				index3 = indices[index0 + 2] + 1;
-				fprintf(file, "FACE:[%d,%d,%d]\n",
+				fprintf(file, "FACE:%d,%d,%d\n",
 				index1 - 1, 
 				index2 - 1, 
 				index3 - 1);  
@@ -262,7 +260,7 @@ void convertMeshToCake(const Mesh_t* mesh, const char* dst) {
 		}
 	}
 
-	fclose(file);
+
 }
 
 
@@ -295,10 +293,34 @@ int main(int argc, char** argv) {
 		printf("Could not find any models in %s\n", argv[1]);
 		exit(1);
 	}
+	
+	// Get mesh count
+	granny_int32 nMeshes = fileInfo->nMeshes;
 
-	Mesh_t* mesh = fileInfo->Meshes[0];
-	getMeshInfo(mesh);
-	convertMeshToCake(mesh, argv[2]);
+	// Open file
+	FILE* file = fopen(argv[2], "w");
+
+	// Loop Meshes
+	for(int iMesh = 0; iMesh < nMeshes; ++iMesh) {
+		
+		
+		Mesh_t* mesh = fileInfo->Meshes[iMesh];
+		char* name = mesh->Name;
+		
+		printf("Mesh: %s (%d)\n", name, iMesh);
+		
+		if (iMesh != 0)
+		{
+			fprintf(file, "MESH\n");
+		}
+			
+		getMeshInfo(mesh);
+		convertMeshToCake(mesh, file);
+		printf("\n");
+	}
+
+	// Close file
+	fclose(file);
 
 	_GrannyFreeFile(grannyFile);
 	return 0;
