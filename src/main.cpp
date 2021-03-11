@@ -144,7 +144,7 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	fprintf(stderr, "# VertexCount: %d, BytesPerVertex: %d\n", nVertices_, bytesPerVertex_);
 	fprintf(stderr, "# IndexCount: %d, BytesPerIndex: %d\n", nIndices_, bytesPerIndex_);
 
-	fprintf(file, "n:%s\n", mesh->Name);
+	fprintf(file, "m:%s\n", mesh->Name);
 //	fprintf(file, "mtllib master.mtl\n");
 
 	if(vertexComponents_[0].exists) { 
