@@ -1,3 +1,4 @@
+  
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -143,14 +144,14 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	fprintf(stderr, "# VertexCount: %d, BytesPerVertex: %d\n", nVertices_, bytesPerVertex_);
 	fprintf(stderr, "# IndexCount: %d, BytesPerIndex: %d\n", nIndices_, bytesPerIndex_);
 
-	fprintf(file, "NAME:%s\n", mesh->Name);
+	fprintf(file, "n:%s\n", mesh->Name);
 //	fprintf(file, "mtllib master.mtl\n");
 
 	if(vertexComponents_[0].exists) { 
 		printf("0. Position found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[0].offset;
-			fprintf(file, "POSITION:%f,%f,%f\n",
+			fprintf(file, "p:%f,%f,%f\n",
 			vertexComponents_[0].convert(vertex + 0 * vertexComponents_[0].typeSize),
 			vertexComponents_[0].convert(vertex + 1 * vertexComponents_[0].typeSize),
 			vertexComponents_[0].convert(vertex + 2 * vertexComponents_[0].typeSize)
@@ -162,7 +163,7 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	    printf("1. Normals found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[1].offset;
-			fprintf(file, "NORMAL:%f,%f,%f\n",
+			fprintf(file, "n:%f,%f,%f\n",
 			vertexComponents_[1].convert(vertex + 0 * vertexComponents_[1].typeSize) / 255,
 			vertexComponents_[1].convert(vertex + 1 * vertexComponents_[1].typeSize) / 255,
 			vertexComponents_[1].convert(vertex + 2 * vertexComponents_[1].typeSize) / 255
@@ -174,7 +175,7 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	    printf("2. Tangents found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[2].offset;
-			fprintf(file, "TANGENT:%f,%f,%f,%f\n",
+			fprintf(file, "t:%f,%f,%f,%f\n",
 			vertexComponents_[2].convert(vertex + 0 * vertexComponents_[2].typeSize) / 255,
 			vertexComponents_[2].convert(vertex + 1 * vertexComponents_[2].typeSize) / 255,
 			vertexComponents_[2].convert(vertex + 2 * vertexComponents_[2].typeSize) / 255,
@@ -187,11 +188,11 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	    printf("3. Bi-Tangents found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[3].offset;
-			fprintf(file, "BITANGENT:%f,%f,%f,%f\n",
+			fprintf(file, "bt:%f,%f,%f,%f\n",
 			vertexComponents_[3].convert(vertex + 0 * vertexComponents_[3].typeSize) / 255,
 			vertexComponents_[3].convert(vertex + 1 * vertexComponents_[3].typeSize) / 255,
 			vertexComponents_[3].convert(vertex + 2 * vertexComponents_[3].typeSize) / 255,
-			vertexComponents_[4].convert(vertex + 3 * vertexComponents_[3].typeSize) / 255
+			vertexComponents_[3].convert(vertex + 3 * vertexComponents_[3].typeSize) / 255
 			);
 		}
 	}
@@ -200,7 +201,7 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 		printf("4. Texture coordinates 0 found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[4].offset;
-			fprintf(file, "TEXCOORD0:%f,%f\n",
+			fprintf(file, "tc0:%f,%f\n",
 			vertexComponents_[4].convert(vertex + 0 * vertexComponents_[4].typeSize),
 			vertexComponents_[4].convert(vertex + 1 * vertexComponents_[4].typeSize)
 			);
@@ -211,7 +212,7 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	printf("5. Texture coordinates 1 found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[5].offset;
-			fprintf(file, "TEXCOORD1:%f,%f\n",
+			fprintf(file, "tc1:%f,%f\n",
 			vertexComponents_[5].convert(vertex + 0 * vertexComponents_[5].typeSize),
 			vertexComponents_[5].convert(vertex + 1 * vertexComponents_[5].typeSize)
 			);
@@ -227,14 +228,14 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 		uint16_t* indices = (uint16_t*) indices_;
 
 		for(int iGroup = 0; iGroup < nTriangleGroups_; ++iGroup) { // for each surface
-			fprintf(file, "AREA:%s\n", mesh->MaterialBindings[triangleGroups_[iGroup].MaterialIndex].Material->Name);
+			fprintf(file, "a:%s\n", mesh->MaterialBindings[triangleGroups_[iGroup].MaterialIndex].Material->Name);
 //			fprintf(file, "usemtl material%d\n", triangleGroups[iGroup].MaterialIndex);
 			for(int iTriangle = 0; iTriangle < triangleGroups_[iGroup].TriCount; ++iTriangle) {
 				index0 = (triangleGroups_[iGroup].TriFirst + iTriangle) * 3;
 				index1 = indices[index0 + 0] + 1;
 				index2 = indices[index0 + 1] + 1;
 				index3 = indices[index0 + 2] + 1;
-				fprintf(file, "FACE:%d,%d,%d\n",
+				fprintf(file, "f:%d,%d,%d\n",
 				index1 - 1, 
 				index2 - 1,
 				index3 - 1); 
@@ -245,14 +246,14 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 		uint32_t* indices = (uint32_t*) indices_;
 
 		for(int iGroup = 0; iGroup < nTriangleGroups_; ++iGroup) { // for each surface
-			fprintf(file, "AREA:%s\n", mesh->MaterialBindings[triangleGroups_[iGroup].MaterialIndex].Material->Name);
+			fprintf(file, "a:%s\n", mesh->MaterialBindings[triangleGroups_[iGroup].MaterialIndex].Material->Name);
 //			fprintf(file, "usemtl material%d\n", triangleGroups[iGroup].MaterialIndex);
 			for(int iTriangle = 0; iTriangle < triangleGroups_[iGroup].TriCount; ++iTriangle) {
 				index0 = (triangleGroups_[iGroup].TriFirst + iTriangle) * 3;
 				index1 = indices[index0 + 0] + 1;
 				index2 = indices[index0 + 1] + 1;
 				index3 = indices[index0 + 2] + 1;
-				fprintf(file, "FACE:%d,%d,%d\n",
+				fprintf(file, "f:%d,%d,%d\n",
 				index1 - 1, 
 				index2 - 1, 
 				index3 - 1);  
