@@ -201,7 +201,7 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 		printf("4. Texture coordinates 0 found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[4].offset;
-			fprintf(file, "tc0:%f,%f\n",
+			fprintf(file, "t0:%f,%f\n",
 			vertexComponents_[4].convert(vertex + 0 * vertexComponents_[4].typeSize),
 			vertexComponents_[4].convert(vertex + 1 * vertexComponents_[4].typeSize)
 			);
@@ -212,7 +212,7 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	printf("5. Texture coordinates 1 found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[5].offset;
-			fprintf(file, "tc1:%f,%f\n",
+			fprintf(file, "t1:%f,%f\n",
 			vertexComponents_[5].convert(vertex + 0 * vertexComponents_[5].typeSize),
 			vertexComponents_[5].convert(vertex + 1 * vertexComponents_[5].typeSize)
 			);
