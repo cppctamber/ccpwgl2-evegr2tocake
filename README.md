@@ -6,16 +6,16 @@ The base file format is a text file.
 Each line represents a new element declaration.
 
 ### supported
-* **Vertex Position**: POSITION:[Float, Float, Float]
-* **Vertex Texture coordinates 0**: TEXCOORD0:[Float, Float]
-* **Vertex Texture coordinates 1**: TEXCOORD1:[Float, Float]
-* **Vertex Normal**: NORMAL:[Float, Float, Float]
-* **Vertex Tangent**: TANGENT:[Float, Float, Float, Float]
-* **Vertex BiTangent**: BITANGENT[Float, Float, Float, Float]
-* **Area Name**: AREA:String (Directly proceeds its faces)
-* **Area Face**: FACE:[Integer, Integer, Integer]
-* **Mesh**: MESH (Directly proceeds a mesh)
-* **Mesh Name** : NAME:String
+* **Vertex Position**: p:Float, Float, Float
+* **Vertex Texture coordinates 0**: t0:Float, Float
+* **Vertex Texture coordinates 1**: t1:Float, Float
+* **Vertex Normal**: n:Float, Float, Float
+* **Vertex Tangent**: t:Float, Float, Float, Float
+* **Vertex BiTangent**: bt:Float, Float, Float, Float
+* **Area Name**: a:String (Directly proceeds its faces)
+* **Area Face**: f:Integer, Integer, Integer
+* **Mesh**: m (Directly proceeds a mesh)
+* **Mesh Name** : n:String
 
 ### unsupported/ todo
 - Animations
