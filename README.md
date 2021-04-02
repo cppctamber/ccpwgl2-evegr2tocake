@@ -14,8 +14,7 @@ Each line represents a new element declaration.
 * **Vertex BiTangent**: bt:Float, Float, Float, Float
 * **Area Name**: a:String (Directly proceeds its faces)
 * **Area Face**: f:Integer, Integer, Integer
-* **Mesh**: m (Directly proceeds a mesh)
-* **Mesh Name** : n:String
+* **Mesh name**: m:String (Directly proceeds a mesh)
 
 ### unsupported/ todo
 - Animations
