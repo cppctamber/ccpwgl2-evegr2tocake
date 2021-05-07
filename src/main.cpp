@@ -1,6 +1,9 @@
-  
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
+//#define STRING(num) #num
+//using namespace std;
 
 #include "granny.h"
 #include "half.cpp"
@@ -78,7 +81,6 @@ VertexComponent vertexComponents_[] = {
 	{ "TextureCoordinates1", -1, false, &convertDummy, 0, 0 }
 };
 
-//int nTriangles_;
 int nTriangleGroups_;
 Group_t* triangleGroups_;
 
@@ -143,12 +145,10 @@ void getMeshInfo(const Mesh_t* mesh) {
 void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	fprintf(stderr, "# VertexCount: %d, BytesPerVertex: %d\n", nVertices_, bytesPerVertex_);
 	fprintf(stderr, "# IndexCount: %d, BytesPerIndex: %d\n", nIndices_, bytesPerIndex_);
-
 	fprintf(file, "m:%s\n", mesh->Name);
-//	fprintf(file, "mtllib master.mtl\n");
 
-	if(vertexComponents_[0].exists) { 
-		printf("0. Position found\n");
+	if(vertexComponents_[0].exists) {
+		printf("0. Position found %d \n", nVertices_);
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[0].offset;
 			fprintf(file, "p:%f,%f,%f\n",
@@ -159,7 +159,7 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 		}
 	}
 
-	if(vertexComponents_[1].exists) { 
+	if(vertexComponents_[1].exists) {
 	    printf("1. Normals found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[1].offset;
@@ -170,8 +170,8 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 			);
 		}
 	}
-	
-	if(vertexComponents_[2].exists) { 
+
+	if(vertexComponents_[2].exists) {
 	    printf("2. Tangents found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[2].offset;
@@ -183,8 +183,8 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 			);
 		}
 	}
-	
-	if(vertexComponents_[3].exists) { 
+
+	if(vertexComponents_[3].exists) {
 	    printf("3. Bi-Tangents found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[3].offset;
@@ -196,8 +196,8 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 			);
 		}
 	}
-	
-	if(vertexComponents_[4].exists) { 
+
+	if(vertexComponents_[4].exists) {
 		printf("4. Texture coordinates 0 found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[4].offset;
@@ -207,8 +207,9 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 			);
 		}
 	}
-	
-	if(vertexComponents_[5].exists) { 
+
+
+	if(vertexComponents_[5].exists) {
 	printf("5. Texture coordinates 1 found\n");
 		for(int iVertex = 0; iVertex < nVertices_; ++iVertex) {
 			uint8_t* vertex = vertices_ + bytesPerVertex_ * iVertex + vertexComponents_[5].offset;
@@ -223,22 +224,21 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 	granny_uint32 index1;
 	granny_uint32 index2;
 	granny_uint32 index3;
+	
+	printf("6. Faces found %d (bytes per index: %d) \n", nTriangleGroups_, bytesPerIndex_);
 
 	if(bytesPerIndex_ == 2) {
 		uint16_t* indices = (uint16_t*) indices_;
 
 		for(int iGroup = 0; iGroup < nTriangleGroups_; ++iGroup) { // for each surface
-			fprintf(file, "a:%s\n", mesh->MaterialBindings[triangleGroups_[iGroup].MaterialIndex].Material->Name);
-//			fprintf(file, "usemtl material%d\n", triangleGroups[iGroup].MaterialIndex);
+			//fprintf(file, "a:%s\n", mesh->MaterialBindings[triangleGroups_[iGroup].MaterialIndex].Material->Name);
+			fprintf(file, "a:area_%d\n", triangleGroups_[iGroup].MaterialIndex);
 			for(int iTriangle = 0; iTriangle < triangleGroups_[iGroup].TriCount; ++iTriangle) {
 				index0 = (triangleGroups_[iGroup].TriFirst + iTriangle) * 3;
 				index1 = indices[index0 + 0] + 1;
 				index2 = indices[index0 + 1] + 1;
 				index3 = indices[index0 + 2] + 1;
-				fprintf(file, "f:%d,%d,%d\n",
-				index1 - 1, 
-				index2 - 1,
-				index3 - 1); 
+				fprintf(file, "f:%d,%d,%d\n",index1 - 1,index2 - 1,index3 - 1);
 			}
 		}
 	}
@@ -246,22 +246,17 @@ void convertMeshToCake(const Mesh_t* mesh, FILE* file) {
 		uint32_t* indices = (uint32_t*) indices_;
 
 		for(int iGroup = 0; iGroup < nTriangleGroups_; ++iGroup) { // for each surface
-			fprintf(file, "a:%s\n", mesh->MaterialBindings[triangleGroups_[iGroup].MaterialIndex].Material->Name);
-//			fprintf(file, "usemtl material%d\n", triangleGroups[iGroup].MaterialIndex);
+			//fprintf(file, "a:%s\n", mesh->MaterialBindings[triangleGroups_[iGroup].MaterialIndex].Material->Name);
+  		    	fprintf(file, "a:area_%d\n", triangleGroups_[iGroup].MaterialIndex);
 			for(int iTriangle = 0; iTriangle < triangleGroups_[iGroup].TriCount; ++iTriangle) {
 				index0 = (triangleGroups_[iGroup].TriFirst + iTriangle) * 3;
 				index1 = indices[index0 + 0] + 1;
 				index2 = indices[index0 + 1] + 1;
 				index3 = indices[index0 + 2] + 1;
-				fprintf(file, "f:%d,%d,%d\n",
-				index1 - 1, 
-				index2 - 1, 
-				index3 - 1);  
+				fprintf(file, "f:%d,%d,%d\n",index1 - 1,index2 - 1,index3 - 1);
 			}
 		}
 	}
-
-
 }
 
 
@@ -287,34 +282,35 @@ int main(int argc, char** argv) {
 		printf("Could not get fileinfo\n");
 		exit(1);
 	}
-	
-	printf("%d\n", fileInfo);
 
+	printf("%d\n", fileInfo);
+	// Get model count
+	granny_int32 nModels = fileInfo->nModels;
+	printf("Models found: %d \n", nModels);
+	// Get mesh count
+	granny_int32 nMeshes = fileInfo->nMeshes;
+	printf("Meshes found: %d \n", nMeshes);
+	printf("\n");
+	
 	if(!fileInfo->nModels) {
 		printf("Could not find any models in %s\n", argv[1]);
 		exit(1);
 	}
-	
-	// Get mesh count
-	granny_int32 nMeshes = fileInfo->nMeshes;
 
 	// Open file
 	FILE* file = fopen(argv[2], "w");
 
 	// Loop Meshes
 	for(int iMesh = 0; iMesh < nMeshes; ++iMesh) {
-		
-		
 		Mesh_t* mesh = fileInfo->Meshes[iMesh];
 		char* name = mesh->Name;
-		
+
 		printf("Mesh: %s (%d)\n", name, iMesh);
-		
-		if (iMesh != 0)
-		{
+
+		if (iMesh != 0){
 			fprintf(file, "MESH\n");
 		}
-			
+
 		getMeshInfo(mesh);
 		convertMeshToCake(mesh, file);
 		printf("\n");
