@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-//#define STRING(num) #num
-//using namespace std;
 
 #include "granny.h"
 #include "half.cpp"
@@ -292,8 +290,8 @@ int main(int argc, char** argv) {
 	printf("Meshes found: %d \n", nMeshes);
 	printf("\n");
 	
-	if(!fileInfo->nModels) {
-		printf("Could not find any models in %s\n", argv[1]);
+	if(!fileInfo->nMeshes) {
+		printf("Could not find any meshes in %s\n", argv[1]);
 		exit(1);
 	}
 
